@@ -6,8 +6,8 @@
  *
  */
 
-import { defer, fromEvent, Observable, OperatorFunction } from 'rxjs';
-import { mapTo, shareReplay, take } from 'rxjs/operators';
+import {defer, fromEvent, map, Observable} from 'rxjs';
+import { shareReplay, take } from 'rxjs/operators';
 
 export interface IStateObj {
   script$: Observable<void> | null;
@@ -36,7 +36,7 @@ const CreateScriptLoader = (): ScriptLoader => {
       scriptTag.type = 'application/javascript';
       scriptTag.src = url;
       doc.head.appendChild(scriptTag);
-      return fromEvent(scriptTag, 'load').pipe(take(1), mapTo(undefined) as OperatorFunction<Event, undefined>);
+      return fromEvent(scriptTag, 'load').pipe(take(1), map(() => undefined));
     }).pipe(shareReplay({ bufferSize: 1, refCount: true })))
   );
 
